@@ -1,9 +1,12 @@
 package bank_app;
 
+import java.math.BigDecimal;
+
 import javax.swing.SwingUtilities;
 
+import db_objects.User;
+import guis.BankingAppGui;
 import guis.LoginGui;
-import guis.RegisterGui;
 
 public class App {
 
@@ -11,8 +14,9 @@ public class App {
 		SwingUtilities.invokeLater(new Runnable(){
 			@Override
 			public void run() {
-				//new LoginGui().setVisible(true);		
-				new RegisterGui().setVisible(true);
+				new LoginGui().setVisible(true);		
+				//new RegisterGui().setVisible(true);
+				
 			}
 			
 		});

@@ -1,6 +1,8 @@
 package guis;
 
 import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -71,17 +73,30 @@ public class RegisterGui extends BaseFrame {
 		add(repasswordField);
 		
 		//create login button
-		JButton loginButton = new JButton("Login");
-		loginButton.setBounds(20, 460, getWidth() - 50, 40);
-		loginButton.setFont(new Font("Dialog", Font.BOLD, 20));
-		add(loginButton);
+		JButton registerButton = new JButton("Register");
+		registerButton.setBounds(20, 460, getWidth() - 50, 40);
+		registerButton.setFont(new Font("Dialog", Font.BOLD, 20));
+		add(registerButton);
 		
-		//create a register label
-		JLabel registerLabel = new JLabel("<html><a href = \"#\">Don't have an account ? Register Here</a></html> ");
-		registerLabel.setBounds(0, 510, getWidth() - 10, 30);
-		registerLabel.setFont(new Font("Dialog", Font.PLAIN, 14));
-		registerLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		add(registerLabel);
+		//create a login label
+		JLabel loginLabel = new JLabel("<html><a href = \"#\">Have an account ? Sign-in Here</a></html> ");
+		loginLabel.setBounds(0, 510, getWidth() - 10, 30);
+		loginLabel.setFont(new Font("Dialog", Font.PLAIN, 14));
+		loginLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		//event listener to the mouse click = mouse click to do something
+			loginLabel.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						//close current window
+						RegisterGui.this.dispose();
+						//open register window
+						new LoginGui().setVisible(true);
+					}
+				});
+		
+		
+		add(loginLabel);
 		
 	}
 
