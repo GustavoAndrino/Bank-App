@@ -53,4 +53,54 @@ public class MyJDBC {
 		//no valid user with matching credentials
 		return null;
 	}
+	
+	//register new user to the database
+	//true = success; false = fail
+	public static boolean register(String username, String password) {
+		try {
+			if(!checkUser(username)) {
+				Connection connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+				
+				PreparedStatement preparedStatement = connection.prepareStatement(
+						"INSERT INTO users(username, password) " +
+								"VALUES(?, ?)"
+						);
+				
+				preparedStatement.setString(1, username);
+				preparedStatement.setString(2, password);
+				
+				preparedStatement.executeUpdate();
+				return true;						
+			}
+
+
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+	
+	//check if user to be registered already exists
+	private static boolean checkUser(String username) {
+		try {
+			Connection connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+			
+			PreparedStatement preparedStatement = connection.prepareStatement(
+					"SELECT * FROM users WHERE username = ?"
+					);
+			
+			preparedStatement.setString(1, username);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			
+			if(!resultSet.next()) {
+				return false;
+			}
+
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return true;
+	}
+	
 }
