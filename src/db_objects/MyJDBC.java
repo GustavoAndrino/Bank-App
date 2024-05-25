@@ -7,6 +7,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 //JDBC Class used to make program interact with MYSQL database
 public class MyJDBC {
@@ -117,6 +118,7 @@ public class MyJDBC {
 				insertTransaction.setInt(1, transaction.getUserId());
 				insertTransaction.setString(2, transaction.getTransactionType());
 				insertTransaction.setBigDecimal(3, transaction.getTransactionAmount());
+				
 			//updating database
 				insertTransaction.executeUpdate();
 				
@@ -202,6 +204,36 @@ public class MyJDBC {
 		}
 		
 		return false;
+	}
+	
+	public static ArrayList<Transaction> getPastTransaction(User user){
+		ArrayList<Transaction> pastTransactions = new ArrayList();
+		
+		try {
+			Connection connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+			PreparedStatement grabTransactions = connection.prepareStatement(
+					"SELECT * FROM transactions WHERE user_id = ?"		
+					);
+			grabTransactions.setInt(1	, user.getId());
+			ResultSet resultSet = grabTransactions.executeQuery();
+
+			while(resultSet.next()) {
+				Transaction transaction = new Transaction(
+						user.getId(),
+						resultSet.getString("transaction_type"),
+						resultSet.getBigDecimal("transaction_amount"),
+						resultSet.getDate("transaction_date")					
+				);
+				pastTransactions.add(transaction);
+			}
+			
+			return pastTransactions;
+			
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 	
 }

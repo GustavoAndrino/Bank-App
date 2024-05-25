@@ -60,12 +60,7 @@ public class BankingAppGui extends BaseFrame implements ActionListener {
 		withdrawlButton.setBounds(15, 250, getWidth() - 50, 50);
 		withdrawlButton.setFont(new Font("Dialog", Font.PLAIN, 22));
 		withdrawlButton.addActionListener(this);
-		/*withdrawlButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed (ActionEvent e) {
-				
-			}
-		});*/
+
 		add(withdrawlButton);
 		
 		//past transaction button
@@ -122,8 +117,10 @@ public class BankingAppGui extends BaseFrame implements ActionListener {
 				bankingAppDialog.addUserField();
 			}
 			
-			bankingAppDialog.setVisible(true);
+		}else if(buttonPressed.equalsIgnoreCase("Past Transaction")) {
+			bankingAppDialog.addPastTransactionComponents();		
 		}
+		bankingAppDialog.setVisible(true);
 		
 	}
 

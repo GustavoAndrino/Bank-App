@@ -1,14 +1,21 @@
 package guis;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
@@ -22,6 +29,8 @@ public class BankingAppDialog extends JDialog implements ActionListener{
 	private JLabel balanceLabel, enterAmountLabel, enterUserLabel;
 	private JTextField enterAmountField, enterUserField;
 	private JButton actionButton;
+	private JPanel pastTransactionPanel;
+	private ArrayList<Transaction> pastTransactions;
 	
 	public BankingAppDialog(BankingAppGui bankingAppGui, User user) {
 		//set the size
@@ -92,6 +101,61 @@ public class BankingAppDialog extends JDialog implements ActionListener{
 		enterUserField.setFont(new Font("Dialog", Font.BOLD, 20));
 		enterUserLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		add(enterUserField);
+	}
+	
+	public void addPastTransactionComponents() {
+		// container where we will store each transaction
+		pastTransactionPanel = new JPanel();
+
+		//make Layout 1x1 
+		pastTransactionPanel.setLayout(new BoxLayout(pastTransactionPanel, BoxLayout.Y_AXIS));
+		
+		//make scrollable
+		JScrollPane scrollPane= new JScrollPane(pastTransactionPanel);
+		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		scrollPane.setBounds(0, 20, getWidth() -20, getHeight() - 60);
+		
+		//perform db call to retrieve all transactions from user
+		pastTransactions = MyJDBC.getPastTransaction(user);
+		
+		//go through list and add each to it
+		for(int i = 0; i < pastTransactions.size(); i++) {
+			//store current transaction
+			Transaction pastTransaction = pastTransactions.get(i);
+			
+			//create a container to store an individual transaction
+			JPanel pastTransactionContainer = new JPanel();
+			pastTransactionContainer.setLayout(new BorderLayout());
+			
+			//create transaction type label
+			JLabel transactionTypeLabel = new JLabel(pastTransaction.getTransactionType());
+			transactionTypeLabel.setFont(new Font("Dialog", Font.BOLD, 20));
+			
+			//create transaction amount label
+			JLabel transactionAmountLabel = new JLabel(String.valueOf(pastTransaction.getTransactionAmount()));
+			transactionAmountLabel.setFont(new Font("Dialog", Font.BOLD, 20));
+			
+			//create transaction date label
+			JLabel transactionDateLabel = new JLabel(String.valueOf(pastTransaction.getTransactionDate()));
+			transactionDateLabel.setFont(new Font("Dialog", Font.BOLD, 20));
+			
+			//add to container
+			pastTransactionContainer.add(transactionTypeLabel, BorderLayout.WEST);
+			pastTransactionContainer.add(transactionAmountLabel, BorderLayout.EAST);
+			pastTransactionContainer.add(transactionDateLabel, BorderLayout.SOUTH);
+			
+			//background color
+			pastTransactionContainer.setBackground(Color.WHITE);
+			
+			//add black border to past transaction pane
+			pastTransactionContainer.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+			
+			//add to the panel
+			pastTransactionPanel.add(pastTransactionContainer);
+		}
+		
+		add(scrollPane);
+		
 	}
 	
 	private void handleTransaction(String transactionType, float amountVal) {
